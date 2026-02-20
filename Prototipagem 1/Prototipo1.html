@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SenaiStock - Controle de Estoque</title>
+    <style>
+        :root {
+            --senai-red: #ff0000;
+            --senai-black: #1a1a1a;
+            --senai-white: #ffffff;
+            --senai-gray: #f4f4f4;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        body { display: flex; height: 100vh; background-color: var(--senai-gray); }
+
+        /* Sidebar */
+        nav { width: 250px; background-color: var(--senai-black); color: white; display: flex; flex-direction: column; padding: 20px; }
+        nav h2 { color: var(--senai-red); margin-bottom: 30px; text-align: center; border-bottom: 2px solid var(--senai-red); padding-bottom: 10px; }
+        nav button { 
+            background: none; border: none; color: white; padding: 15px; text-align: left; 
+            cursor: pointer; font-size: 16px; transition: 0.3s; border-radius: 5px; margin-bottom: 5px;
+        }
+        nav button:hover { background-color: var(--senai-red); }
+        nav button.active { background-color: var(--senai-red); font-weight: bold; }
+
+        /* Área Principal */
+        main { flex: 1; padding: 40px; overflow-y: auto; }
+        header { margin-bottom: 30px; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
+        
+        .page { display: none; animation: fadeIn 0.4s; }
+        .page.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Formulários e Estilo */
+        .card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 600px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: var(--senai-black); }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        
+        .btn-submit { 
+            background-color: var(--senai-red); color: white; border: none; padding: 12px 20px; 
+            border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px;
+        }
+        .btn-submit:hover { background-color: #cc0000; }
+
+        .status-msg { margin-top: 15px; padding: 10px; border-radius: 4px; display: none; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <h2>SenaiStock</h2>
+        <button onclick="showPage('cadastro')" id="btn-cadastro">1. Cadastro de Livros</button>
+        <button onclick="showPage('recebimento')" id="btn-recebimento">2. Recebimento</button>
+        <button onclick="showPage('retirada')" id="btn-retirada">3. Retirada (Baixa)</button>
+    </nav>
+
+    <main>
+        <section id="cadastro" class="page">
+            <header><h1>Cadastro de Novos Títulos</h1></header>
+            <div class="card">
+                <div class="form-group">
+                    <label>Título do Livro</label>
+                    <input type="text" placeholder="Ex: Eletricidade Básica">
+                </div>
+                <div class="form-group">
+                    <label>ISBN</label>
+                    <input type="text" placeholder="000-00-000-0000-0">
+                </div>
+                <div class="form-group">
+                    <label>Matéria / Categoria</label>
+                    <select>
+                        <option>Elétrica</option>
+                        <option>Mecânica</option>
+                        <option>Informática</option>
+                        <option>Gestão</option>
+                    </select>
+                </div>
+                <button class="btn-submit" onclick="msg('Livro cadastrado com sucesso!')">Cadastrar Livro</button>
+            </div>
+        </section>
+
+        <section id="recebimento" class="page">
+            <header><h1>Entrada de Estoque (Abastecimento)</h1></header>
+            <div class="card">
+                <div class="form-group">
+                    <label>Selecionar Livro</label>
+                    <select>
+                        <option>Eletricidade Básica (Saldo: 12)</option>
+                        <option>Logística Integrada (Saldo: 5)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Quantidade Recebida (Caixas/Unidades)</label>
+                    <input type="number" min="1" placeholder="Ex: 50">
+                </div>
+                <button class="btn-submit" onclick="msg('Estoque atualizado! +50 unidades.')" style="background-color: #28a745;">Registrar Entrada</button>
+            </div>
+        </section>
+
+        <section id="retirada" class="page">
+            <header><h1>Retirada de Livros (Baixa para Turma)</h1></header>
+            <div class="card" style="border-left: 5px solid var(--senai-red);">
+                <div class="form-group">
+                    <label>Livro a ser retirado</label>
+                    <select id="livro-retirada">
+                        <option value="12">Eletricidade Básica (Disponível: 12)</option>
+                        <option value="5">Logística Integrada (Disponível: 5)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Quantidade para Retirada</label>
+                    <input type="number" id="qtd-retirada" placeholder="Ex: 30">
+                </div>
+                <div class="form-group">
+                    <label>Turma / Instrutor</label>
+                    <input type="text" placeholder="Ex: Turma de Elétrica A">
+                </div>
+                <button class="btn-submit" onclick="validarBaixa()">Dar Baixa no Estoque</button>
+                <div id="status" class="status-msg"></div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Lógica de Navegação
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(pageId).classList.add('active');
+            document.getElementById('btn-' + pageId).classList.add('active');
+        }
+
+        // Simulação de Regra de Negócio (Saída)
+        function validarBaixa() {
+            const qtdSolicitada = parseInt(document.getElementById('qtd-retirada').value);
+            const disponivel = parseInt(document.getElementById('livro-retirada').value);
+            const status = document.getElementById('status');
+
+            status.style.display = "block";
+            
+            if (qtdSolicitada > disponivel) {
+                status.innerText = "ERRO: Estoque Insuficiente!";
+                status.style.backgroundColor = "#ffdddd";
+                status.style.color = "red";
+            } else {
+                status.innerText = "SAÍDA REGISTRADA: Estoque atualizado.";
+                status.style.backgroundColor = "#ddffdd";
+                status.style.color = "green";
+            }
+        }
+
+        function msg(texto) { alert(texto); }
+
+        // Iniciar na página de cadastro
+        showPage('cadastro');
+    </script>
+</body>
+</html>
