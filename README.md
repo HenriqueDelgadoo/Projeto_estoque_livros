@@ -10,21 +10,29 @@ O **SenaiStock** é um sistema web que permite controlar a entrada e saída de l
 
 O sistema resolve o problema de controle manual do estoque, garantindo:
 
-- ✔ Controle de saldo em tempo real
-- ✔ Bloqueio de retirada com estoque insuficiente
-- ✔ Registro de todas as movimentações
-- ✔ Monitoramento de estoque baixo
-- ✔ Autenticação de usuários
+* ✔ **Controle de saldo em tempo real**
+* ✔ **Bloqueio de retirada** com estoque insuficiente
+* ✔ **Registro de todas as movimentações** (Auditabilidade)
+* ✔ **Monitoramento de estoque baixo**
+* ✔ **Autenticação segura** de usuários
+
+---
+
+## 🔗 Links Úteis e Documentação
+
+* 📑 **Documentação Detalhada (Milanote):** [Acesse aqui](https://app.milanote.com/1VTuyb1wNggDbB?p=iRUzxTpROXh)
+* 🎨 **Protótipo (Figma):** [Link para o Projeto no Figma](https://www.figma.com/design/qRQOzPSOp29ZR1pDYgBzO1/Senai-Estoque?node-id=0-1&m=dev&t=KzvO60ciM8k8olok-1)
+* 📄 **Arquivo de Documentação:** Consulte o arquivo `Documentação SenaiStock` na raiz deste repositório.
 
 ---
 
 ## 🚀 Tecnologias Utilizadas
 
-- PHP 8+
-- Laravel 10+
-- MySQL
-- Bootstrap (Interface)
-- Laravel Breeze (Autenticação)
+* **Linguagem:** PHP 8+
+* **Framework:** Laravel 10+
+* **Banco de Dados:** MySQL
+* **Frontend:** Bootstrap (Interface)
+* **Autenticação:** Laravel Breeze
 
 ---
 
@@ -32,175 +40,83 @@ O sistema resolve o problema de controle manual do estoque, garantindo:
 
 O sistema segue o padrão **MVC (Model - View - Controller)** do Laravel:
 
-- **Model:** Regras de negócio e acesso ao banco
-- **View:** Interface com Blade
-- **Controller:** Controle das requisições
-- **Middleware:** Controle de acesso
+* **Model:** Regras de negócio e acesso ao banco de dados.
+* **View:** Interface do usuário construída com Blade Engines.
+* **Controller:** Gerenciamento do fluxo de requisições.
+* **Middleware:** Camada de segurança e controle de acesso.
 
 ---
 
 ## 🔐 Funcionalidades
 
-### 1️⃣ Autenticação
-- Login e Logout
-- Controle por perfil (Almoxarife / Coordenador)
+### 1. Autenticação
+* Login e Logout seguros.
+* Controle por perfil de acesso (**Almoxarife / Coordenador**).
+
+### 2. Cadastro de Livros (CRUD)
+* Operações completas: Cadastrar, Editar, Excluir e Listar.
+* Validação de **ISBN único**.
+* Campos: Título, ISBN, Matéria e Quantidade.
+
+### 3. Movimentações (Entrada e Saída)
+* **Entrada:** Soma automática ao estoque com registro histórico.
+* **Saída:** Subtração automática com bloqueio de **estoque negativo**.
+* **Regra:** Se a retirada for maior que o saldo, o sistema exibe: *"Estoque insuficiente"*.
+
+### 4. Relatórios e Alertas
+* **Monitoramento:** Lista automática de livros com menos de 10 unidades.
+* **Histórico:** Filtros por tipo (Entrada/Saída), data e livro específico.
 
 ---
 
-### 2️⃣ Cadastro de Livros (CRUD)
-- Cadastrar livro
-- Editar livro
-- Excluir livro
-- Listar livros
-- ISBN único
-- Controle de quantidade em estoque
+## 🗄️ Estrutura do Banco de Dados
 
-Campos:
-- Título
-- ISBN
-- Matéria
-- Quantidade
+### Tabela: `users`
+| Campo | Tipo |
+| :--- | :--- |
+| id | PK |
+| name | string |
+| email | string (unique) |
+| perfil | enum (Almoxarife/Coordenador) |
 
----
-
-### 3️⃣ Entrada de Estoque
-- Selecionar livro
-- Informar quantidade recebida
-- Soma automática ao estoque
-- Registro no histórico como **ENTRADA**
-
-Regra:
-- Quantidade deve ser maior que zero
-
----
-
-### 4️⃣ Saída de Estoque
-- Selecionar livro
-- Informar quantidade retirada
-- Informar destino (ex: Turma A - Elétrica)
-- Subtração automática do estoque
-- Registro no histórico como **SAÍDA**
-
-Regra de Negócio:
-- ❌ Não permite retirada maior que o saldo disponível
-- Exibe mensagem: "Estoque insuficiente"
-
----
-
-### 5️⃣ Monitoramento de Estoque Baixo
-- Lista livros com quantidade abaixo de 10 unidades
-- Exibição com alerta visual
-
----
-
-### 6️⃣ Histórico de Movimentações
-Registra:
-- Tipo (Entrada/Saída)
-- Livro
-- Usuário responsável
-- Quantidade
-- Destino (se saída)
-- Data e hora
-
-Permite filtros por:
-- Tipo
-- Data
-- Livro
-
----
-
-## 🗄️ Banco de Dados
-
-### Tabela: users
-- id
-- name
-- email
-- password
-- perfil
-- timestamps
-
----
-
-### Tabela: livros
-- id
-- titulo
-- isbn (único)
-- materia
-- quantidade
-- timestamps
-
----
-
-### Tabela: movimentacoes
-- id
-- tipo (ENTRADA / SAIDA)
-- livro_id
-- user_id
-- quantidade
-- destino (nullable)
-- timestamps
+### Tabela: `livros`
+| Campo | Tipo |
+| :--- | :--- |
+| id | PK |
+| titulo | string |
+| isbn | string (unique) |
+| materia | string |
+| quantidade | integer |
 
 ---
 
 ## 🛠️ Instalação do Projeto
 
-### 1️⃣ Clonar o repositório
+Siga os passos abaixo para rodar o projeto localmente:
 
 ```bash
-git clone https://github.com/seu-usuario/senai-stock.git
+# 1. Clonar o repositório
+git clone [https://github.com/seu-usuario/senai-stock.git](https://github.com/seu-usuario/senai-stock.git)
 cd senai-stock
-```
 
----
-
-### 2️⃣ Instalar dependências
-
-```bash
+# 2. Instalar dependências
 composer install
 npm install
-```
 
----
-
-### 3️⃣ Configurar ambiente
-
-Copie o arquivo:
-
-```bash
+# 3. Configurar ambiente
 cp .env.example .env
-```
 
-Configure o banco de dados no `.env`:
+# Configure o banco de dados no .env:
+# DB_DATABASE=senai_stock
+# DB_USERNAME=root
+# DB_PASSWORD=
 
-```env
-DB_DATABASE=senai_stock
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
----
-
-### 4️⃣ Gerar chave da aplicação
-
-```bash
+# 4. Gerar chave e migrar banco
 php artisan key:generate
-```
-
----
-
-### 5️⃣ Executar migrations
-
-```bash
 php artisan migrate
-```
 
----
-
-### 6️⃣ Rodar o servidor
-
-```bash
+# 5. Rodar o servidor
 php artisan serve
-```
 
 Acesse no navegador:
 
@@ -254,7 +170,7 @@ resources/
 
 ---
 
-## 👨‍💻 Autor
+## 👨‍💻 Autores
 
 Henrique Delgado;
 Gabriel Marques Terra;
