@@ -1,312 +1,263 @@
-# Projeto_estoque_livros
-📚 SenaiStock – Sistema Completo de Controle de Estoque de Livros Didáticos
+# 📚 SenaiStock
 
-Sistema Web completo desenvolvido para o SENAI, com Back-End + Front-End + Banco de Dados, permitindo controle total de livros didáticos no almoxarifado.
+Sistema Web completo para controle de estoque de livros didáticos do SENAI, desenvolvido com **PHP + Laravel**.
 
-🏫 Contexto do Projeto
+---
 
-O almoxarifado do SENAI recebe grandes remessas de livros, mas não possui controle preciso das saídas. Isso causa:
+## 📌 Sobre o Projeto
 
-Estoque zerado inesperadamente
+O **SenaiStock** é um sistema web que permite controlar a entrada e saída de livros do almoxarifado, mantendo o saldo sempre atualizado e evitando falta de material nas turmas.
 
-Atrasos na distribuição para turmas
+O sistema resolve o problema de controle manual do estoque, garantindo:
 
-Falta de planejamento de reposição
+- ✔ Controle de saldo em tempo real
+- ✔ Bloqueio de retirada com estoque insuficiente
+- ✔ Registro de todas as movimentações
+- ✔ Monitoramento de estoque baixo
+- ✔ Autenticação de usuários
 
-O SenaiStock resolve esse problema com um sistema completo de gestão de estoque, com autenticação, controle de movimentações e relatórios.
+---
 
-🖥️ Visão Geral do Sistema
-4
+## 🚀 Tecnologias Utilizadas
 
-O sistema é composto por:
+- PHP 8+
+- Laravel 10+
+- MySQL
+- Bootstrap (Interface)
+- Laravel Breeze (Autenticação)
 
-🔐 Tela de Login
+---
 
-📚 Cadastro de Livros
+## 🏗️ Arquitetura
 
-➕ Registro de Entrada (Abastecimento)
+O sistema segue o padrão **MVC (Model - View - Controller)** do Laravel:
 
-➖ Registro de Saída (Baixa Manual)
+- **Model:** Regras de negócio e acesso ao banco
+- **View:** Interface com Blade
+- **Controller:** Controle das requisições
+- **Middleware:** Controle de acesso
 
-📊 Monitoramento de Estoque Baixo
+---
 
-📄 Histórico de Movimentações
+## 🔐 Funcionalidades
 
-👤 Controle de Usuários
+### 1️⃣ Autenticação
+- Login e Logout
+- Controle por perfil (Almoxarife / Coordenador)
 
-🏗️ Arquitetura do Sistema
-🔹 1. Front-End
+---
 
-Interface Web Responsiva
-
-Tecnologias sugeridas:
-
-React ou HTML + CSS + JavaScript
-
-Bootstrap ou Tailwind
-
-🔹 2. Back-End
-
-API REST responsável pelas regras de negócio
-
-Tecnologias sugeridas:
-
-Node.js + Express
-ou
-
-Java + Spring Boot
-
-🔹 3. Banco de Dados
-
-PostgreSQL ou MySQL
-
-🔐 Funcionalidades do Sistema
-1️⃣ Autenticação e Controle de Acesso
-Perfis de Usuário:
-Perfil	Permissões
-Almoxarife	Gerencia entradas e saídas
-Coordenador	Visualiza relatórios e estoque
-Funcionalidades:
-
-Login com email e senha
-
-Senhas criptografadas
-
-Controle por perfil
-
-Sessão com Token JWT
-
-2️⃣ Cadastro de Livros
-Campos:
-
-ID
-
-Título
-
-ISBN (Único)
-
-Matéria
-
-Quantidade em Estoque
-
-Funcionalidades:
-
-Cadastrar novo livro
-
-Editar livro
-
-Excluir livro
-
-Listar todos os livros
-
-3️⃣ Entrada de Estoque (Abastecimento)
-
-Quando chegam caixas da editora:
-
-Seleciona o livro
-
-Informa a quantidade recebida
-
-Sistema soma ao saldo atual
-
-✔ Regra:
-
-Quantidade deve ser maior que 0.
-
-4️⃣ Saída de Estoque (Baixa Manual)
-
-Funcionalidade principal do sistema.
-
-Seleciona o livro
-
-Informa quantidade retirada
-
-Informa destino (ex: Turma A – Elétrica)
-
-Sistema subtrai automaticamente
-
-❗ Regra de Negócio:
-
-Não permitir retirada maior que o saldo disponível.
-
-Exibir mensagem: "Estoque Insuficiente"
-
-5️⃣ Monitoramento de Estoque Baixo
-
-Tela que exibe livros com quantidade abaixo de um valor mínimo (ex: 10 unidades).
-
-Filtro por quantidade mínima
-
-Alerta visual (cor vermelha)
-
-Sugestão de reposição
-
-6️⃣ Histórico de Movimentações
-
-Cada entrada ou saída deve gerar um registro:
+### 2️⃣ Cadastro de Livros (CRUD)
+- Cadastrar livro
+- Editar livro
+- Excluir livro
+- Listar livros
+- ISBN único
+- Controle de quantidade em estoque
 
 Campos:
+- Título
+- ISBN
+- Matéria
+- Quantidade
 
-Tipo (Entrada ou Saída)
+---
 
-Livro
+### 3️⃣ Entrada de Estoque
+- Selecionar livro
+- Informar quantidade recebida
+- Soma automática ao estoque
+- Registro no histórico como **ENTRADA**
 
-Quantidade
+Regra:
+- Quantidade deve ser maior que zero
 
-Usuário responsável
+---
 
-Data e hora
+### 4️⃣ Saída de Estoque
+- Selecionar livro
+- Informar quantidade retirada
+- Informar destino (ex: Turma A - Elétrica)
+- Subtração automática do estoque
+- Registro no histórico como **SAÍDA**
 
-Destino (no caso de saída)
+Regra de Negócio:
+- ❌ Não permite retirada maior que o saldo disponível
+- Exibe mensagem: "Estoque insuficiente"
 
-Permite:
+---
 
-Filtro por data
+### 5️⃣ Monitoramento de Estoque Baixo
+- Lista livros com quantidade abaixo de 10 unidades
+- Exibição com alerta visual
 
-Filtro por tipo
+---
 
-Relatório completo
+### 6️⃣ Histórico de Movimentações
+Registra:
+- Tipo (Entrada/Saída)
+- Livro
+- Usuário responsável
+- Quantidade
+- Destino (se saída)
+- Data e hora
 
-🗄️ Modelo de Banco de Dados
-Tabela: usuarios
-CREATE TABLE usuarios (
-    id SERIAL PRIMARY KEY,
-    nome VARCHAR(100),
-    email VARCHAR(100) UNIQUE,
-    senha VARCHAR(255),
-    perfil VARCHAR(20),
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-Tabela: livros
-CREATE TABLE livros (
-    id SERIAL PRIMARY KEY,
-    titulo VARCHAR(150),
-    isbn VARCHAR(20) UNIQUE,
-    materia VARCHAR(100),
-    quantidade INTEGER DEFAULT 0,
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-Tabela: movimentacoes
-CREATE TABLE movimentacoes (
-    id SERIAL PRIMARY KEY,
-    tipo VARCHAR(10), -- ENTRADA ou SAIDA
-    livro_id INTEGER REFERENCES livros(id),
-    usuario_id INTEGER REFERENCES usuarios(id),
-    quantidade INTEGER,
-    destino VARCHAR(150),
-    data_movimentacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-📂 Estrutura Completa do Projeto
-senai-stock/
-│
-├── backend/
-│   ├── controllers/
-│   ├── services/
-│   ├── repositories/
-│   ├── middlewares/
-│   ├── routes/
-│   └── server.js
-│
-├── frontend/
-│   ├── pages/
-│   ├── components/
-│   ├── services/
-│   └── App.js
-│
-├── database/
-│   └── schema.sql
-│
-├── .env
-└── README.md
-📊 Fluxo de Funcionamento
+Permite filtros por:
+- Tipo
+- Data
+- Livro
 
-Usuário faz login
+---
 
-Acessa o painel principal
+## 🗄️ Banco de Dados
 
-Visualiza estoque atual
+### Tabela: users
+- id
+- name
+- email
+- password
+- perfil
+- timestamps
 
-Registra entrada ou saída
+---
 
-Sistema atualiza saldo
+### Tabela: livros
+- id
+- titulo
+- isbn (único)
+- materia
+- quantidade
+- timestamps
 
-Movimentação é registrada no histórico
+---
 
-Sistema verifica automaticamente se estoque está abaixo do mínimo
+### Tabela: movimentacoes
+- id
+- tipo (ENTRADA / SAIDA)
+- livro_id
+- user_id
+- quantidade
+- destino (nullable)
+- timestamps
 
-🎨 Telas do Sistema
+---
 
-Tela de Login
+## 🛠️ Instalação do Projeto
 
-Dashboard Principal
+### 1️⃣ Clonar o repositório
 
-Cadastro de Livros
+```bash
+git clone https://github.com/seu-usuario/senai-stock.git
+cd senai-stock
+```
 
-Entrada de Estoque
+---
 
-Saída de Estoque
+### 2️⃣ Instalar dependências
 
-Estoque Baixo
-
-Histórico de Movimentações
-
-Gerenciamento de Usuários
-
-🔐 Segurança
-
-Senhas com Bcrypt
-
-Autenticação via JWT
-
-Middleware de autorização
-
-Validação de dados
-
-Bloqueio de estoque negativo
-
-🚀 Como Executar
-Backend
-cd backend
+```bash
+composer install
 npm install
-npm run dev
-Frontend
-cd frontend
-npm install
-npm start
+```
 
-Servidor:
+---
 
-http://localhost:3000
-📈 Possíveis Melhorias Futuras
+### 3️⃣ Configurar ambiente
 
-Dashboard com gráficos (Chart.js)
+Copie o arquivo:
 
-Exportação de relatório em PDF
+```bash
+cp .env.example .env
+```
 
-Controle por múltiplas unidades
+Configure o banco de dados no `.env`:
 
-Integração com ERP
+```env
+DB_DATABASE=senai_stock
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-Controle por lote
+---
 
-Notificação automática de estoque baixo
+### 4️⃣ Gerar chave da aplicação
 
-🧠 Diferencial do Projeto
+```bash
+php artisan key:generate
+```
 
-✔ Sistema completo (não apenas API)
-✔ Controle real de movimentações
-✔ Regras de negócio implementadas
-✔ Autenticação com níveis de acesso
-✔ Estrutura pronta para expansão
+---
 
-Se quiser, posso agora gerar:
+### 5️⃣ Executar migrations
 
-🎨 Protótipo visual das telas
+```bash
+php artisan migrate
+```
 
-📊 Diagrama ER
+---
 
-🧩 Diagrama de Caso de Uso
+### 6️⃣ Rodar o servidor
 
-💻 Código completo pronto (Node ou Java)
+```bash
+php artisan serve
+```
 
-📘 Versão formatada em padrão ABNT para entrega acadêmica
+Acesse no navegador:
+
+```
+http://localhost:8000
+```
+
+---
+
+## 📂 Estrutura do Projeto
+
+```
+app/
+ ├── Models/
+ │    ├── Livro.php
+ │    └── Movimentacao.php
+ │
+ ├── Http/
+ │    ├── Controllers/
+ │    │      ├── LivroController.php
+ │    │      ├── EstoqueController.php
+ │    │      └── MovimentacaoController.php
+ │
+resources/
+ ├── views/
+ │    ├── dashboard.blade.php
+ │    ├── livros/
+ │    ├── estoque/
+ │    └── movimentacoes/
+```
+
+---
+
+## 🔒 Regras de Negócio
+
+- Não permitir estoque negativo
+- ISBN deve ser único
+- Apenas usuários autenticados podem alterar estoque
+- Toda movimentação deve ser registrada
+- Quantidade deve ser maior que zero
+
+---
+
+## 📈 Melhorias Futuras
+
+- Dashboard com gráficos
+- Exportação em PDF
+- Controle por múltiplas unidades
+- Notificações automáticas de estoque baixo
+- Sistema de relatórios avançado
+
+---
+
+## 👨‍💻 Autor
+
+Henrique Delgado;
+Gabriel Marques Terra;
+Lucas Terminiello:
+
+---
